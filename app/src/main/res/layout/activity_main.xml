@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.fec.h5demo.MainActivity"
+    >
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="48dp"
+      >
+    <EditText
+        android:id="@+id/et"
+        android:lines="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@null"
+        />
+    <Button
+        android:id="@+id/btn_go"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="refresh"
+        />
+  </LinearLayout>
+
+  <WebView
+      android:id="@+id/wv"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      />
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+    <Button
+        android:id="@+id/btn_call"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="调用js"
+        />
+    <Button
+        android:id="@+id/btn_call1"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="传参调用js"
+        />
+    <Button
+        android:id="@+id/btn_call2"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="传参调用js回调"
+        />
+    <Button
+        android:id="@+id/btn_call3"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="调用js方法回调"
+        />
+  </LinearLayout>
+
+</LinearLayout>

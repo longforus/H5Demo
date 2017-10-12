@@ -1,0 +1,104 @@
+<html>
+<head>
+    <meta xmlns="http://www.w3.org/1999/xhtml" http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script language="javascript">
+
+        function showToast(){
+          var message = document.getElementById("message").value;
+          var lengthLong = document.getElementById("length").checked;
+          app.makeToast(message, lengthLong);
+          return false;
+      }
+            /*
+             把showToast方法重定向给onsubmit == window.app.makeToast()
+             */
+             window.onload = function(){
+                var form = document.getElementById("form");
+                form.onsubmit = showToast;
+            }
+
+            function toastAlert(){
+                var msg = document.getElementById('message').value;
+                alert(msg);
+            }
+
+            function actionFromNativeWithParam(arg){
+               document.getElementById("log_msg").innerHTML +=
+               ("<br\>Native调用了js函数并传递参数："+arg);
+           }
+
+            function callNative(msg){
+            window.app.gotoActivity(msg);
+           }
+
+
+           console.log("user_client.js called!");
+           var bridge;
+           document.addEventListener('WebViewJavascriptBridgeReady'
+            , function(event) {
+                bridge=event.bridge;
+            bridge.init(function(message, responseCallback) {//初始化默认给java调用的处理方法
+                document.getElementById("log_msg").innerHTML +=
+               ("<br\>Javascript默认处理方法收到了: "+ message);
+               if (responseCallback) {
+                   responseCallback("js默认处理") ;
+               }
+            }) ;
+
+            bridge.send('js无回调发送');
+            bridge.send('js回调发送', function(responseData) {//发送消息给java并取得回复
+               document.getElementById("log_msg").innerHTML +=
+               ("<br\>Javascript收到了回答: "+ responseData);
+            });
+
+            bridge.registerHandler("showAlert", function(data,responseCallback) {
+            alert("alert:"+data);
+             responseCallback(data+1);
+             });//提供给java调用
+
+            bridge.callHandler("handler1","js发送给handler1",function(responseData){//调用java传送数据并取得回复
+               document.getElementById("log_msg").innerHTML +=
+               ("<br\>js收到handler1的response:"+responseData);
+            });
+            }, false)
+
+           function fwcallNative(msg){//启动acivitiy
+            bridge.callHandler("gotoActivity",msg,function(responseData){
+                document.getElementById("log_msg").innerHTML +=
+                 ("<br\>js启动activity得到了response:"+responseData);
+            });
+           }
+
+</script>
+</head>
+<body>
+<a href="mc://mcvc?class=KCGoodCategoryVC&showtype=push&dataString=MCstring&jsid=888888">打开商品分类</a><br>
+<a href="mc://mcvc?class=KCShopDetailVC&showtype=push&dataString=MCstring&jsid=66666">打开店铺详情</a><br>
+<a href="mc://mcvc?class=KCGoodDetailVC&showtype=present&dataString=MCstring&jsid=888666">打开商品详情</a><br>
+<a href="mc://mcfunc?func=test">执行本地方法</a><br>
+<a href="mc://mcfunc?func=test1&data=MCstring">执行本地方法并传值</a><br>
+<script>
+               var arg1 = "{'type':'mcvc','class':'com.fec.StartActivity','showtype':'push','dataString':'Js传入'}";
+</script>
+<input type="button" value="调用java方法进行跳转,传值"  onclick="callNative(arg1);"/><br>
+
+<input type="button" value="使用框架进行跳转,传值"  onclick="fwcallNative(arg1);"/><br>
+<!--    <p>加密后的连接</p>-->
+<!--    <a href="mc://j97nAm965gnrIXpHYmW+a8kNd5UpDJcuqJYyrNSlOfWR5C2gOs7LAmySYbtGFzPolyMefbL2IuSLsF1zrEbwNOEZLT7LCQ945mhWKf58hEQ=">push打开test控制器并传值(DES加密后)</a><br>-->
+<!--    <a href="mc://pw6crcLgT4KvP+28OSjAP6KK6OcyJddjb8+kW9TbwRs=">执行本地方法并传值(DES加密后)</a><br>-->
+<input type="button" value="JS交互 push打开test控制器并传值" onclick="mc({'type':'mcvc','class':'TestViewController','showtype':'push','dataString':'js string'});"/><br>
+<input type="button" value="JS交互 present打开test控制器并传值" onclick="mc({'type':'mcvc','class':'TestViewController','showtype':'present','dataString':'js string'});"/><br>
+<input type="button" value="JS交互 执行本地方法并传值" onclick="mc({'type':'mcfunc','func':'test:','data':'MCstring'});"/><br>
+<br>
+<form id="form">
+    ToastMessage: <input id="message" name="message" type="text"/><br/>
+    Long: <input id="length" name="length" type="checkbox"/><br/>
+
+    <input type="submit" value="Make Toast"/>
+</form>
+
+<div id="log_msg">调用打印信息</div>
+</body>
+</html>
+
+
